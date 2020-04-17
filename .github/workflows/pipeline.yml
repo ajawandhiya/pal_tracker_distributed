@@ -15,7 +15,7 @@ jobs:
       - name: Startup test database instance
         run: sudo service mysql start
       - name: Create test database
-      run: |
+      run:
           mysql -uroot -proot < databases/create_databases.sql
           chmod +x gradlew
           ./gradlew testMigrate
