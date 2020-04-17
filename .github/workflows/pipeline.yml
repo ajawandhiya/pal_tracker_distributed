@@ -3,7 +3,6 @@ name: Pal Tracker Distributed Pipeline
 on:
   push:
     branches: [master]
-
 jobs:
   build-and-publish:
     runs-on: ubuntu-latest
@@ -16,9 +15,11 @@ jobs:
       - name: Startup test database instance
         run: sudo service mysql start
       - name: Create test database
-        run: |
+      run: |
           mysql -uroot -proot < databases/create_databases.sql
+          chmod +x gradlew
           ./gradlew testMigrate
+
       - name: Build with Gradle
         run: ./gradlew clean build
       - name: Publish allocations artifact
@@ -174,6 +175,7 @@ jobs:
           cf api "$CF_API_URL"
           cf auth
           cf target -o "$CF_ORG" -s "$CF_SPACE"
+          chmod +x gradlew
           ./gradlew cfMigrate
         env:
           CF_API_URL: ${{ secrets.CF_API_URL }}
