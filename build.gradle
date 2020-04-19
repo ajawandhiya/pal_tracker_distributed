@@ -14,46 +14,48 @@ buildscript {
         junitVersion = "4.12"
         okhttpVersion = "3.12.0"
         jsonPathVersion = "2.4.0"
+        springCloudVersion = "Finchley.RELEASE"
+        springCloudServicesClientLibrariesVersion = "2.0.0.RELEASE"
+
+        repositories {
+            mavenCentral()
+            jcenter()
+        }
+
+        dependencies {
+            classpath "org.springframework.boot:spring-boot-gradle-plugin:$springBootVersion"
+            classpath "mysql:mysql-connector-java:$mysqlVersion"
+        }
     }
 
-    repositories {
-        mavenCentral()
-        jcenter()
-    }
+    apply plugin: DependenciesGraphPlugin
 
-    dependencies {
-        classpath "org.springframework.boot:spring-boot-gradle-plugin:$springBootVersion"
-        classpath "mysql:mysql-connector-java:$mysqlVersion"
-    }
-}
+    subprojects {
+        group "io.pivotal.pal.tracker"
 
-apply plugin: DependenciesGraphPlugin
+        apply plugin: "java"
+        defaultTasks "clean", "build"
 
-subprojects {
-    group "io.pivotal.pal.tracker"
+        repositories {
+            mavenCentral()
+            jcenter()
+        }
 
-    apply plugin: "java"
-    defaultTasks "clean", "build"
+        dependencies {
+            compile "com.fasterxml.jackson.core:jackson-core:$jacksonVersion"
+            compile "com.fasterxml.jackson.core:jackson-databind:$jacksonVersion"
+            compile "com.fasterxml.jackson.core:jackson-annotations:$jacksonVersion"
+            compile "org.slf4j:slf4j-api:$slf4jVersion"
 
-    repositories {
-        mavenCentral()
-        jcenter()
-    }
+            testCompile "junit:junit:$junitVersion"
+            testCompile "org.mockito:mockito-core:$mockitoVersion"
+            testCompile "org.assertj:assertj-core:$assertJVersion"
+        }
 
-    dependencies {
-        compile "com.fasterxml.jackson.core:jackson-core:$jacksonVersion"
-        compile "com.fasterxml.jackson.core:jackson-databind:$jacksonVersion"
-        compile "com.fasterxml.jackson.core:jackson-annotations:$jacksonVersion"
-        compile "org.slf4j:slf4j-api:$slf4jVersion"
-
-        testCompile "junit:junit:$junitVersion"
-        testCompile "org.mockito:mockito-core:$mockitoVersion"
-        testCompile "org.assertj:assertj-core:$assertJVersion"
-    }
-
-    test {
-        testLogging {
-            exceptionFormat = 'full'
+        test {
+            testLogging {
+                exceptionFormat = 'full'
+            }
         }
     }
 }
